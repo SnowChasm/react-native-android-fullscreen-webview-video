@@ -111,8 +111,18 @@ public class CustomWebViewManager extends SimpleViewManager<WebView> {
     // state and release page resources (including any running JavaScript).
     protected static final String BLANK_URL = "about:blank";
 
+    protected CustomWebViewPackage aPackage;
+
     protected WebViewConfig mWebViewConfig;
     protected @Nullable WebView.PictureListener mPictureListener;
+
+    public void setPackage(CustomWebViewPackage aPackage){
+        this.aPackage = aPackage;
+    }
+
+    public CustomWebViewPackage getPackage() {
+        return this.aPackage;
+    }
 
     protected static class ReactWebViewClient extends WebViewClient {
 
@@ -345,28 +355,10 @@ public class CustomWebViewManager extends SimpleViewManager<WebView> {
 
     @Override
     protected WebView createViewInstance(ThemedReactContext reactContext) {
-        // ReactWebView webView = createReactWebViewInstance(reactContext);
-        // webView.setWebChromeClient(new WebChromeClient() {
-        //
-        // final ReactWebView webView = new ReactWebView(reactContext);
-        // webView.setWebChromeClient(new VideoWebChromeClient(reactContext.getCurrentActivity(), webView) {
-        //
-        ReactWebView webView = createReactWebViewInstance(reactContext);
-        webView.setWebChromeClient(new VideoWebChromeClient(reactContext.getCurrentActivity(), webView, reactContext));
-        //     @Override
-        //     public boolean onConsoleMessage(ConsoleMessage message) {
-        //         if (ReactBuildConfig.DEBUG) {
-        //             return super.onConsoleMessage(message);
-        //         }
-        //         // Ignore console logs in non debug builds.
-        //         return true;
-        //     }
 
-        //     @Override
-        //     public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-        //         callback.invoke(origin, true, false);
-        //     }
-        // });
+        ReactWebView webView = createReactWebViewInstance(reactContext);
+        webView.setWebChromeClient(new VideoWebChromeClient(reactContext.getCurrentActivity(), webView, reactContext, this));
+
         reactContext.addLifecycleEventListener(webView);
         mWebViewConfig.configWebView(webView);
         webView.getSettings().setBuiltInZoomControls(true);
@@ -381,6 +373,24 @@ public class CustomWebViewManager extends SimpleViewManager<WebView> {
         }
 
         return webView;
+    }
+
+    /**
+     * @param aPackage the aPackage to set
+     */
+    public void setaPackage(CustomWebViewPackage aPackage) {
+        this.aPackage = aPackage;
+    }
+
+    /**
+     * @return the aPackage
+     */
+    public CustomWebViewPackage getaPackage() {
+        return this.aPackage;
+    }
+
+    public CustomWebViewModule getModule() {
+        return this.aPackage.getModule();
     }
 
     @ReactProp(name = "javaScriptEnabled")

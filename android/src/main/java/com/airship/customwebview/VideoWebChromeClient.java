@@ -1,5 +1,7 @@
 package com.airship.customwebview;
 
+import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -29,6 +31,7 @@ public class VideoWebChromeClient extends WebChromeClient {
 
   private final FrameLayout.LayoutParams FULLSCREEN_LAYOUT_PARAMS = new FrameLayout.LayoutParams(
       LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.CENTER);
+  private final CustomWebViewManager mViewManager;
 
   private WebChromeClient.CustomViewCallback mCustomViewCallback;
 
@@ -40,12 +43,29 @@ public class VideoWebChromeClient extends WebChromeClient {
   private ViewGroup.LayoutParams paramsNotFullscreen;
   private ThemedReactContext mReactContext;
 
-  public VideoWebChromeClient(Activity activity, WebView webView, ThemedReactContext reactContext) {
+  public VideoWebChromeClient(Activity activity, WebView webView, ThemedReactContext reactContext, CustomWebViewManager viewManager) {
+    mViewManager = viewManager;
     mWebView = webView;
     mActivity = activity;
     isVideoFullscreen = false;
     nbFois = 0;
     mReactContext = reactContext;
+  }
+
+  public CustomWebViewModule getModule () {
+    return mViewManager.getPackage().getModule();
+  }
+
+  // For Android 4.1+
+  @SuppressWarnings("unused")
+  public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+      getModule().startFileChooserIntent(uploadMsg, acceptType);
+  }
+
+  // For Android 5.0+
+  @SuppressLint("NewApi")
+  public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+      return getModule().startFileChooserIntent(filePathCallback, fileChooserParams.createIntent());
   }
 
   @Override
