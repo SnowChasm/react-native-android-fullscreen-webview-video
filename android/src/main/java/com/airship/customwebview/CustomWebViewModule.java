@@ -44,11 +44,11 @@ public class CustomWebViewModule extends ReactContextBaseJavaModule implements A
     return REACT_CLASS;
   }
 
-  public void setaPackage(CustomWebViewPackage aPackage) {
+  public void setPackage(CustomWebViewPackage aPackage) {
     this.aPackage = aPackage;
   }
 
-  public CustomWebViewPackage getaPackage() {
+  public CustomWebViewPackage getPackage() {
     return this.aPackage;
   }
 

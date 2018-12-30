@@ -1,6 +1,8 @@
 package com.airship.customwebview;
 
 import android.annotation.SuppressLint;
+import android.webkit.ValueCallback;
+import android.net.Uri;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
